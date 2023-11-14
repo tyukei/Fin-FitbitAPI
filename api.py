@@ -23,7 +23,7 @@ def bearer_header():
     else:
         return None
 
-def request(method, url, access_token, **kw):
+def request(method, url, **kw):
     """
     ...
     Args:
@@ -34,7 +34,7 @@ def request(method, url, access_token, **kw):
     Returns:
         session.Response: レスポンス
     """
-    headers = bearer_header(access_token)
+    headers = bearer_header()
     res = method(url, headers=headers, **kw)
     # その他の処理
     return res
