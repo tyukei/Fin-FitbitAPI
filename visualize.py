@@ -10,12 +10,13 @@ def init_ui():
 
     st.title('Fitbit Data Viewer')
     st.write('今日の歩数')
-    with st.spinner('Loading...'):
-        step=get_step()
-        st.write(f'{step}歩')
 
     # 日付選択ウィジェット
     date = st.sidebar.date_input("日付を選択")
+    if date is not None:
+        with st.spinner('Loading...'):
+            step=get_step()
+            st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
 
     # データ取得ボタン
     if st.button('heartrate data'):
