@@ -29,6 +29,6 @@ if not st.session_state['authenticated']:
 
 
 if st.session_state['authenticated']:
-    app.main()
+    app2.main()
 
 
