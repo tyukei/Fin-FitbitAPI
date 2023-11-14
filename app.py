@@ -1,48 +1,34 @@
 import streamlit as st
-from api import heartbeat  
-from api import activity_zone   
-from api import activity_summary
-from api import breath_summary
-from api import hrv_summary
-from api import get_step
+import app2  
 
-def init_ui():
+# 認証情報の設定
+VALID_USERNAME = "fin"
+VALID_PASSWORD = "123456"
 
-    st.title('Fitbit Data Viewer')
-    st.write('今日の歩数')
-    with st.spinner('Loading...'):
-        step=get_step()
-        st.write(f'{step}歩')
+# 認証状態を保持するセッション変数
+if 'authenticated' not in st.session_state:
+    st.session_state['authenticated'] = False
 
-    # 日付選択ウィジェット
-    date = st.sidebar.date_input("日付を選択")
+# ユーザー認証関数
+def authenticate(username, password):
+    return username == VALID_USERNAME and password == VALID_PASSWORD
 
-    # データ取得ボタン
-    if st.button('heartrate data'):
-        response = heartbeat(date=date.strftime("%Y-%m-%d"))
-        data = response.json()
-        st.json(data) 
+# 認証フォームの表示
+if not st.session_state['authenticated']:
+    with st.form("login_form"):
+        username = st.text_input("ユーザー名")
+        password = st.text_input("パスワード", type="password")
+        submit_button = st.form_submit_button("ログイン")
 
-    if st.button('activity zone data'):
-        response = activity_zone(date=date.strftime("%Y-%m-%d"))
-        data = response.json()
-        st.json(data) 
+        if submit_button:
+            if authenticate(username, password):
+                st.session_state['authenticated'] = True
+                st.experimental_rerun()
+            else:
+                st.error("ログイン失敗：ユーザー名またはパスワードが間違っています")
 
-    if st.button('activity summary data'):
-        response = activity_summary(date=date.strftime("%Y-%m-%d"))
-        data = response.json()
-        st.json(data)
 
-    if st.button('breath summary data'):
-        response = breath_summary(date=date.strftime("%Y-%m-%d"))
-        data = response.json()
-        st.json(data)
-        
-    if st.button('hrv summary data'):
-        response = hrv_summary(date=date.strftime("%Y-%m-%d"))
-        data = response.json()
-        st.json(data)
+if st.session_state['authenticated']:
+    app.main()
 
-def main():
-    init_ui()
 
