@@ -151,7 +151,7 @@ def activity_summary(date: str = "today", period: str = "1d"):
 def get_step(date: str = "today", period: str = "1d"):
     res = activity_summary(date=date, period=period)
     data = res.json()
-    return data['summary']['steps']
+    # return data['summary']['steps']
 
 
 def breath_summary(date: str = "today", period: str = "1d"):
