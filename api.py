@@ -151,6 +151,7 @@ def activity_summary(date: str = "today", period: str = "1d"):
 def get_step(date: str = "today", period: str = "1d"):
     res = activity_summary(date=date, period=period)
     data = res.json()
+    print(data)
     print(data['summary']['steps'])
 
 
