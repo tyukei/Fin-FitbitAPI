@@ -4,10 +4,15 @@ from api import activity_zone
 from api import activity_summary
 from api import breath_summary
 from api import hrv_summary
+from api import get_step
 
 def init_ui():
 
     st.title('Fitbit Data Viewer')
+    st.write('今日の歩数')
+    with st.spinner('Loading...'):
+        step=get_step()
+        st.write(f'{step}歩')
 
     # 日付選択ウィジェット
     date = st.sidebar.date_input("日付を選択")

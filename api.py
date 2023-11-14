@@ -1,12 +1,14 @@
 # Sessionを使わず、import requestsでもOKです
+import streamlit as st
 from requests import Session
 from pprint import pprint
 import json
 
 session = Session()
 
-with open("./test_conf.json", "r", encoding="utf-8") as f:
-    conf = json.load(f)
+# with open("./test_conf.json", "r", encoding="utf-8") as f:
+#     conf = json.load(f)
+
 
 
 def bearer_header():
@@ -14,7 +16,8 @@ def bearer_header():
     Returns:
         dict: {"Authorization":"Bearer " + your-access-token}
     """
-    return {"Authorization": "Bearer " + conf["access_token"]}
+    # return {"Authorization": "Bearer " + conf["access_token"]}
+    return {"Authorization": "Bearer " + st.secrets["access_token"]}
 
 
 def refresh():
@@ -28,10 +31,15 @@ def refresh():
     url = "https://api.fitbit.com/oauth2/token"
 
     # client typeなのでclient_idが必要
+    # params = {
+    #     "grant_type": "refresh_token",
+    #     "refresh_token": conf["refresh_token"],
+    #     "client_id": conf["client_id"],
+    # }
     params = {
         "grant_type": "refresh_token",
-        "refresh_token": conf["refresh_token"],
-        "client_id": conf["client_id"],
+        "refresh_token": st.secrets["refresh_token"],
+        "client_id": st.secrets["client_id"],
     }
 
     # POST実行。 Body部はapplication/x-www-form-urlencoded。requestsならContent-Type不要。
@@ -47,10 +55,15 @@ def refresh():
         return
 
     # errorなし。confを更新し、ファイルを更新
-    conf["access_token"] = res_data["access_token"]
-    conf["refresh_token"] = res_data["refresh_token"]
-    with open("./test_conf.json", "w", encoding="utf-8") as f:
-        json.dump(conf, f, indent=2)
+    # conf["access_token"] = res_data["access_token"]
+    # conf["refresh_token"] = res_data["refresh_token"]
+    # with open("./test_conf.json", "w", encoding="utf-8") as f:
+    #     json.dump(conf, f, indent=2) c
+
+    st.secrets["access_token"] = res_data["access_token"]
+    st.secrets["refresh_token"] = res_data["refresh_token"]
+    # with open("./test_conf.json", "w", encoding="utf-8") as f:
+    #     json.dump(st.secrets, f, indent=2)        
 
 
 def is_expired(resObj) -> bool:
@@ -130,10 +143,16 @@ def activity_zone(date: str = "today", period: str = "1d"):
 
 def activity_summary(date: str = "today", period: str = "1d"):
     # パラメタを埋め込んでエンドポイント生成
-    url = f"https://api.fitbit.com/1/user/-/activities/activities/date/{date}.json"
+    url = f"https://api.fitbit.com/1/user/-/activities/date/{date}.json"
     headers = bearer_header()
     res = request(session.get, url, headers=headers)
     return res
+
+def get_step(date: str = "today", period: str = "1d"):
+    res = activity_summary(date=date, period=period)
+    data = res.json()
+    print(data['summary']['steps'])
+
 
 def breath_summary(date: str = "today", period: str = "1d"):
     # パラメタを埋め込んでエンドポイント生成
@@ -148,6 +167,8 @@ def hrv_summary(date: str = "today", period: str = "1d"):
     headers = bearer_header()
     res = request(session.get, url, headers=headers)
     return res
+
+get_step()
 
 # 実行例
 # res = heartbeat()
