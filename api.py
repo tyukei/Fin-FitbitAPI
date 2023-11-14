@@ -9,14 +9,19 @@ session = Session()
 # with open("./test_conf.json", "r", encoding="utf-8") as f:
 #     conf = json.load(f)
 
-def bearer_header(access_token):
+def bearer_header():
     """Bearer認証用ヘッダを作成する。
     Args:
         access_token (str): アクセストークン
     Returns:
         dict: 認証ヘッダ
     """
-    return {"Authorization": "Bearer " + access_token}
+    new_access_token, new_refresh_token = refresh()
+    if new_access_token and new_refresh_token:
+        access_token = new_access_token
+        return {"Authorization": "Bearer " + access_token}
+    else:
+        return None
 
 def request(method, url, access_token, **kw):
     """
