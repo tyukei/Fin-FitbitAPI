@@ -1,5 +1,5 @@
 import streamlit as st
-import app2  
+import visualize  
 
 # 認証情報の設定
 VALID_USERNAME = "fin"
@@ -29,6 +29,6 @@ if not st.session_state['authenticated']:
 
 
 if st.session_state['authenticated']:
-    app2.main()
+    visualize.main()
 
 
