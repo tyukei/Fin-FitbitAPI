@@ -9,61 +9,70 @@ session = Session()
 # with open("./test_conf.json", "r", encoding="utf-8") as f:
 #     conf = json.load(f)
 
-
-
-def bearer_header():
-    """Bearer認証用ヘッダ
+def bearer_header(access_token):
+    """Bearer認証用ヘッダを作成する。
+    Args:
+        access_token (str): アクセストークン
     Returns:
-        dict: {"Authorization":"Bearer " + your-access-token}
+        dict: 認証ヘッダ
     """
-    # return {"Authorization": "Bearer " + conf["access_token"]}
-    return {"Authorization": "Bearer " + st.secrets["access_token"]}
+    return {"Authorization": "Bearer " + access_token}
+
+def request(method, url, access_token, **kw):
+    """
+    ...
+    Args:
+        method (function): ...
+        url (str): ...
+        access_token (str): アクセストークン
+        **kw: その他のキーワード引数
+    Returns:
+        session.Response: レスポンス
+    """
+    headers = bearer_header(access_token)
+    res = method(url, headers=headers, **kw)
+    # その他の処理
+    return res
 
 
 def refresh():
     """
-    access_tokenを再取得し、conf.jsonを更新する。
-    refresh_tokenは再取得に必要なので重要。
-    is_expiredがTrueの時のみ呼ぶ。
-    False時に呼んでも一式更新されるので、実害はない。
+    access_tokenを再取得する。
+    新しいaccess_tokenとrefresh_tokenを返す。
+
+    Args:
+        refresh_token (str): 現在のリフレッシュトークン
+        client_id (str): クライアントID
+
+    Returns:
+        tuple: 新しい(access_token, refresh_token)
     """
+    refresh_token = st.secrets["refresh_token"]
+    client_id = st.secrets["client_id"]
 
     url = "https://api.fitbit.com/oauth2/token"
-
-    # client typeなのでclient_idが必要
-    # params = {
-    #     "grant_type": "refresh_token",
-    #     "refresh_token": conf["refresh_token"],
-    #     "client_id": conf["client_id"],
-    # }
     params = {
         "grant_type": "refresh_token",
-        "refresh_token": st.secrets["refresh_token"],
-        "client_id": st.secrets["client_id"],
+        "refresh_token": refresh_token,
+        "client_id": client_id,
     }
 
-    # POST実行。 Body部はapplication/x-www-form-urlencoded。requestsならContent-Type不要。
     res = session.post(url, data=params)
-
-    # responseをパース
     res_data = res.json()
 
-    # errorあり
+    # エラーチェック
     if res_data.get("errors") is not None:
         emsg = res_data["errors"][0]
         print(emsg)
-        return
+        return None, None
 
-    # errorなし。confを更新し、ファイルを更新
-    # conf["access_token"] = res_data["access_token"]
-    # conf["refresh_token"] = res_data["refresh_token"]
-    # with open("./test_conf.json", "w", encoding="utf-8") as f:
-    #     json.dump(conf, f, indent=2) c
+    return res_data["access_token"], res_data["refresh_token"]
 
-    st.secrets["access_token"] = res_data["access_token"]
-    st.secrets["refresh_token"] = res_data["refresh_token"]
-    # with open("./test_conf.json", "w", encoding="utf-8") as f:
-    #     json.dump(st.secrets, f, indent=2)        
+# 使用例
+# new_access_token, new_refresh_token = refresh(current_refresh_token, client_id)
+# if new_access_token and new_refresh_token:
+#     # 新しいトークンを使用する
+
 
 
 def is_expired(resObj) -> bool:
@@ -96,35 +105,6 @@ def is_expired(resObj) -> bool:
     return False
 
 
-def request(method, url, **kw):
-    """
-    sessionを通してリクエストを実行する関数。
-    アクセストークンが8Hで失効するため、失効時は再取得し、
-    リクエストを再実行する。
-    レスポンスはパースしないので、呼ぶ側で.json()なり.text()なりすること。
-
-    Args:
-        method (function): session.get,session.post...等
-        url (str): エンドポイント
-        **kw: headers={},params={}を想定
-
-    Returns:
-        session.Response: レスポンス
-    """
-
-    # パラメタで受け取った関数を実行し、jsonでパース
-    res = method(url, **kw)
-    res_data = res.json()
-
-    if is_expired(res_data):
-        # 失効していしている場合、トークンを更新する
-        refresh()
-        # headersに設定されているトークンも
-        # 新しい内容に更新して、methodを再実行
-        kw["headers"] = bearer_header()
-        res = method(url, **kw)
-    # parseしていないほうを返す
-    return res
 
 
 def heartbeat(date: str = "today", period: str = "1d"):
@@ -168,7 +148,7 @@ def hrv_summary(date: str = "today", period: str = "1d"):
     res = request(session.get, url, headers=headers)
     return res
 
-get_step()
+# get_step()
 
 # 実行例
 # res = heartbeat()
