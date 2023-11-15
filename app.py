@@ -23,7 +23,7 @@ if not st.session_state['authenticated']:
         if submit_button:
             if authenticate(username, password):
                 st.session_state['authenticated'] = True
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("ログイン失敗：ユーザー名またはパスワードが間違っています")
 

@@ -151,7 +151,15 @@ def activity_summary(date: str = "today", period: str = "1d"):
 def get_step(date: str = "today", period: str = "1d"):
     res = activity_summary(date=date, period=period)
     data = res.json()
-    return data['summary']['steps']
+    print(data)
+
+    # Check if 'summary' key exists in the response
+    if 'summary' in data:
+        return data['summary']['steps']
+    else:
+        print(f"'summary' key not found in response for date {date}")
+        return 0 
+
 
 
 def breath_summary(date: str = "today", period: str = "1d"):

@@ -13,7 +13,7 @@ def init_ui():
     # 日付選択ウィジェット
     date = st.sidebar.date_input("日付を選択")
     if date is not None:
-        step=get_step(date=date.strftime("%Y-%m-%d"))
+        step=get_step()
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
 
     # データ取得ボタン
