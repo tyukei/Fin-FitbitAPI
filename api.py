@@ -13,7 +13,9 @@ session = Session()
 #     conf = json.load(f)
 
 client_id, access_token, refresh_token = get_gss_value(uid=2)   
-
+print(client_id)
+print(access_token)
+print(refresh_token)
 
 def bearer_header():
     """Bearer認証用ヘッダ
