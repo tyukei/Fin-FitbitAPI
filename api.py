@@ -12,7 +12,7 @@ session = Session()
 # with open("./test_conf.json", "r", encoding="utf-8") as f:
 #     conf = json.load(f)
 
-client_id, access_token, refresh_token = get_gss_value(uid=1)   
+client_id, access_token, refresh_token = get_gss_value(uid=2)   
 
 
 def bearer_header():
