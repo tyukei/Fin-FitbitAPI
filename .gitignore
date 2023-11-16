@@ -1,2 +1,4 @@
 .venv
 test_conf.json
+gss_credential.json
+.streamlit

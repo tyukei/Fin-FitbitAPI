@@ -3,12 +3,16 @@ import streamlit as st
 from requests import Session
 from pprint import pprint
 import json
+from fitbit_token import get_gss_value
+from fitbit_token import update_access_token
+from fitbit_token import update_refresh_token
 
 session = Session()
 
 # with open("./test_conf.json", "r", encoding="utf-8") as f:
 #     conf = json.load(f)
 
+client_id, access_token, refresh_token = get_gss_value(uid=1)   
 
 
 def bearer_header():
@@ -17,7 +21,8 @@ def bearer_header():
         dict: {"Authorization":"Bearer " + your-access-token}
     """
     # return {"Authorization": "Bearer " + conf["access_token"]}
-    return {"Authorization": "Bearer " + st.secrets["access_token"]}
+    # return {"Authorization": "Bearer " + st.secrets["access_token"]}
+    return {"Authorization": "Bearer " + access_token}
 
 
 def refresh():
@@ -38,8 +43,8 @@ def refresh():
     # }
     params = {
         "grant_type": "refresh_token",
-        "refresh_token": st.secrets["refresh_token"],
-        "client_id": st.secrets["client_id"],
+        "refresh_token": refresh_token,
+        "client_id": client_id,
     }
 
     # POST実行。 Body部はapplication/x-www-form-urlencoded。requestsならContent-Type不要。
@@ -60,8 +65,8 @@ def refresh():
     # with open("./test_conf.json", "w", encoding="utf-8") as f:
     #     json.dump(conf, f, indent=2) c
 
-    st.secrets["access_token"] == res_data["access_token"]
-    st.secrets["refresh_token"] == res_data["refresh_token"]
+    update_access_token(uid=1, access_token=res_data["access_token"])
+    update_refresh_token(uid=1, refresh_token=res_data["refresh_token"])
     # with open("./test_conf.json", "w", encoding="utf-8") as f:
     #     json.dump(st.secrets, f, indent=2)        
 
