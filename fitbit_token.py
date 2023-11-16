@@ -42,11 +42,9 @@ def get_gss_value(uid):
     client_id_cell = 'B' + str(uid)
     # スプレッドシートを読み込み
     client_id = worksheet.acell(client_id_cell).value
-    print(value)
 
     access_token_cell = 'C' + str(uid)
     access_token = worksheet.acell(access_token_cell).value
-    print(value)
 
     refresh_token_cell = 'D' + str(uid)
     refresh_token = worksheet.acell(refresh_token_cell).value
