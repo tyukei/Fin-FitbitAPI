@@ -48,10 +48,10 @@ def init_ui():
         data = response.json()
         st.json(data)
 
-    if st.button('user'):
-        response = get_user()
-        data = response.json()
-        st.json(data)
+    # if st.button('user'):
+    #     response = get_user()
+    #     data = response.json()
+    #     st.json(data)
 
 def main():
     init_ui()
