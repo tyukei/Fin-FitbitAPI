@@ -168,12 +168,22 @@ def get_step(date: str = "today", period: str = "1d"):
         print(f"'summary' key not found in response for date {date}")
         return 0 
 
-# def get_user():
-#     # パラメタを埋め込んでエンドポイント生成
-#     url = f"https://api.fitbit.com/1/user/-/profile.json"
-#     headers = bearer_header()
-#     res = request(session.get, url, headers=headers)
-#     return res
+def get_user():
+    # パラメタを埋め込んでエンドポイント生成
+    url = f"https://api.fitbit.com/1/user/-/profile.json"
+    headers = bearer_header()
+    res = request(session.get, url, headers=headers)
+    return res
+
+def get_displayn_name():
+    res = get_user()
+    data = res.json()
+
+    # Check if 'summary' key exists in the response
+    if 'user' in data:
+        return data['user']['displayName']
+    else:
+        return 0
 
 
 def breath_summary():

@@ -7,20 +7,27 @@ from api import hrv_summary
 from api import get_step
 from api import setupUser
 from api import get_user
+import api
 
 def init_ui():
 
     st.title('Fitbit Data Viewer')
+    display_name = api.get_displayn_name()
+    header = st.header(f"ようこそ{display_name}さん")
+    uid = st.sidebar.number_input('uid', min_value=1, max_value=100, value=1, step=1)
+
+    setupUser(uid+1)
+    display_name = api.get_displayn_name()
+    header.header(f"ようこそ{display_name}さん")
 
     # 日付選択ウィジェット
+
     date = st.sidebar.date_input("日付を選択")
     if date is not None:
         step=get_step(date=date.strftime("%Y-%m-%d"))
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
 
-    uid = st.number_input('uid', min_value=1, max_value=100, value=1, step=1)
-    if uid != 1:
-        setupUser(uid+1)
+
 
     # データ取得ボタン
     if st.button('heartrate data'):
@@ -48,10 +55,10 @@ def init_ui():
         data = response.json()
         st.json(data)
 
-    # if st.button('user'):
-    #     response = get_user()
-    #     data = response.json()
-    #     st.json(data)
+    if st.button('user'):
+        response = get_user()
+        data = response.json()
+        st.json(data)
 
 def main():
     init_ui()
