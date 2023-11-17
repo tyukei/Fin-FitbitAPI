@@ -39,14 +39,14 @@ def get_gss_value(uid):
     # スプレッドシートを定義
     worksheet = get_gss_worksheet(gss_name='FitbitKey', gss_sheet_name='シート1')
 
-    client_id_cell = 'B' + str(uid)
+    client_id_cell = 'B' + str(uid+1)
     # スプレッドシートを読み込み
     client_id = worksheet.acell(client_id_cell).value
 
-    access_token_cell = 'C' + str(uid)
+    access_token_cell = 'C' + str(uid+1)
     access_token = worksheet.acell(access_token_cell).value
 
-    refresh_token_cell = 'D' + str(uid)
+    refresh_token_cell = 'D' + str(uid+1)
     refresh_token = worksheet.acell(refresh_token_cell).value
 
     list = [client_id, access_token, refresh_token]
