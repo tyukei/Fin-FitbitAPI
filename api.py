@@ -13,9 +13,10 @@ session = Session()
 #     conf = json.load(f)
 
 client_id, access_token, refresh_token = get_gss_value(uid=2)   
-print(client_id)
-print(access_token)
-print(refresh_token)
+
+def setupUser(uid):
+    global client_id, access_token, refresh_token
+    client_id, access_token, refresh_token = get_gss_value(uid=uid)
 
 def bearer_header():
     """Bearer認証用ヘッダ
@@ -167,11 +168,17 @@ def get_step(date: str = "today", period: str = "1d"):
         print(f"'summary' key not found in response for date {date}")
         return 0 
 
-
-
-def breath_summary(date: str = "today", period: str = "1d"):
+def get_user():
     # パラメタを埋め込んでエンドポイント生成
-    url = f"https://api.fitbit.com/1/user/-/br/date/{date}.json"
+    url = f"https://api.fitbit.com/1/user/-/profile.json"
+    headers = bearer_header()
+    res = request(session.get, url, headers=headers)
+    return res
+
+
+def breath_summary():
+    # パラメタを埋め込んでエンドポイント生成
+    url = f"https://api.fitbit.com/1/user/-/profile.json"
     headers = bearer_header()
     res = request(session.get, url, headers=headers)
     return res

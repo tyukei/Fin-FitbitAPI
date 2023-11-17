@@ -54,16 +54,16 @@ def get_gss_value(uid):
 
 def update_client_id(uid, client_id):
     worksheet = get_gss_worksheet(gss_name='FitbitKey', gss_sheet_name='シート1')
-    gss_cell = 'B' + str(uid)
+    gss_cell = 'B' + str(uid+1)
     worksheet.update_acell(gss_cell, client_id)
 
 def update_access_token(uid, access_token):
     worksheet = get_gss_worksheet(gss_name='FitbitKey', gss_sheet_name='シート1')
-    gss_cell = 'C' + str(uid)
+    gss_cell = 'C' + str(uid+1)
     worksheet.update_acell(gss_cell, access_token)
 
 def update_refresh_token(uid, refresh_token):
     worksheet = get_gss_worksheet(gss_name='FitbitKey', gss_sheet_name='シート1')
-    gss_cell = 'D' + str(uid)
+    gss_cell = 'D' + str(uid+1)
     worksheet.update_acell(gss_cell, refresh_token)
 

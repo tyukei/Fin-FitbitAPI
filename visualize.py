@@ -5,6 +5,8 @@ from api import activity_summary
 from api import breath_summary
 from api import hrv_summary
 from api import get_step
+from api import setupUser
+from api import get_user
 
 def init_ui():
 
@@ -15,6 +17,10 @@ def init_ui():
     if date is not None:
         step=get_step(date=date.strftime("%Y-%m-%d"))
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
+
+    uid = st.number_input('uid', min_value=1, max_value=100, value=1, step=1)
+    if uid != 1:
+        setupUser(uid+1)
 
     # データ取得ボタン
     if st.button('heartrate data'):
@@ -39,6 +45,11 @@ def init_ui():
         
     if st.button('hrv summary data'):
         response = hrv_summary(date=date.strftime("%Y-%m-%d"))
+        data = response.json()
+        st.json(data)
+
+    if st.button('user'):
+        response = get_user()
         data = response.json()
         st.json(data)
 
