@@ -19,12 +19,20 @@ def setupUser(uid):
     client_id, access_token, refresh_token = get_gss_value(uid=uid)
 
 def bearer_header():
-    """Bearer認証用ヘッダ
+    """Bearer認証用ヘッダを取得する。
+
     Returns:
-        dict: {"Authorization":"Bearer " + your-access-token}
+        dict: 認証用ヘッダ。
+
+    Raises:
+        ValueError: access_token が設定されていない場合に発生。
     """
-    # return {"Authorization": "Bearer " + conf["access_token"]}
-    # return {"Authorization": "Bearer " + st.secrets["access_token"]}
+    # access_token の取得方法を確認する
+    # 例: 環境変数、設定ファイル、または Streamlit の secrets から取得
+
+    if access_token is None:
+        raise ValueError("アクセストークンが取得できません。")
+
     return {"Authorization": "Bearer " + access_token}
 
 
