@@ -9,7 +9,7 @@ from fitbit_token import update_refresh_token
 
 session = Session()
 uuid = 1
-client_id, access_token, refresh_token = None, None, None 
+client_id, access_token, refresh_token = get_gss_value(uid=uuid)
 
 def setupUser(uid):
     global uuid
