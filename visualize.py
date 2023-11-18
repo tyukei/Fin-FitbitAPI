@@ -16,7 +16,7 @@ def init_ui():
     header = st.header(f"ようこそ{display_name}さん")
     uid = st.sidebar.number_input('uid', min_value=1, max_value=100, value=1, step=1)
 
-    setupUser(uid+1)
+    setupUser(uid=uid)
     display_name = api.get_displayn_name()
     header.header(f"ようこそ{display_name}さん")
 
