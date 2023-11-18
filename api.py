@@ -8,15 +8,17 @@ from fitbit_token import update_access_token
 from fitbit_token import update_refresh_token
 
 session = Session()
-
-# with open("./test_conf.json", "r", encoding="utf-8") as f:
-#     conf = json.load(f)
-
-client_id, access_token, refresh_token = get_gss_value(uid=1)   
+uuid = 1
+client_id, access_token, refresh_token = None, None, None 
 
 def setupUser(uid):
+    global uuid
     global client_id, access_token, refresh_token
+    uuid = uid
     client_id, access_token, refresh_token = get_gss_value(uid=uid)
+    print(f"client_id: {client_id}")
+    print(f"access_token: {access_token}")
+    print(f"refresh_token: {refresh_token}")
 
 def bearer_header():
     """Bearer認証用ヘッダを取得する。
@@ -45,13 +47,6 @@ def refresh():
     """
 
     url = "https://api.fitbit.com/oauth2/token"
-
-    # client typeなのでclient_idが必要
-    # params = {
-    #     "grant_type": "refresh_token",
-    #     "refresh_token": conf["refresh_token"],
-    #     "client_id": conf["client_id"],
-    # }
     params = {
         "grant_type": "refresh_token",
         "refresh_token": refresh_token,
@@ -70,16 +65,9 @@ def refresh():
         print(emsg)
         return
 
-    # errorなし。confを更新し、ファイルを更新
-    # conf["access_token"] = res_data["access_token"]
-    # conf["refresh_token"] = res_data["refresh_token"]
-    # with open("./test_conf.json", "w", encoding="utf-8") as f:
-    #     json.dump(conf, f, indent=2) c
 
-    update_access_token(uid=1, access_token=res_data["access_token"])
-    update_refresh_token(uid=1, refresh_token=res_data["refresh_token"])
-    # with open("./test_conf.json", "w", encoding="utf-8") as f:
-    #     json.dump(st.secrets, f, indent=2)        
+    update_access_token(uid=uuid, access_token=res_data["access_token"])
+    update_refresh_token(uid=uuid, refresh_token=res_data["refresh_token"])
 
 
 def is_expired(resObj) -> bool:
