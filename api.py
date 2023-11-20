@@ -145,6 +145,9 @@ def activity_zone(date: str = "today", period: str = "1d"):
     res = request(session.get, url, headers=headers)
     return res
 
+
+
+
 def activity_summary(date: str = "today", period: str = "1d"):
     # パラメタを埋め込んでエンドポイント生成
     url = f"https://api.fitbit.com/1/user/-/activities/date/{date}.json"
@@ -177,7 +180,7 @@ def get_displayn_name():
 
     # Check if 'summary' key exists in the response
     if 'user' in data:
-        return data['user']['displayName']
+        return data['user']['fullName']
     else:
         return 0
 

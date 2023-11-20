@@ -13,21 +13,16 @@ def init_ui():
 
     st.title('Fitbit Data Viewer')
     display_name = api.get_displayn_name()
-    header = st.header(f"ようこそ{display_name}さん")
     uid = st.sidebar.number_input('uid', min_value=1, max_value=100, value=1, step=1)
 
     setupUser(uid=uid)
     display_name = api.get_displayn_name()
-    header.header(f"ようこそ{display_name}さん")
-
-    # 日付選択ウィジェット
+    st.header(f"ようこそ{display_name}さん")
 
     date = st.sidebar.date_input("日付を選択")
     if date is not None:
         step=get_step(date=date.strftime("%Y-%m-%d"))
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
-
-
 
     # データ取得ボタン
     if st.button('heartrate data'):
