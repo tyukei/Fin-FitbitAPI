@@ -12,8 +12,10 @@ import api
 def init_ui():
 
     st.title('Fitbit Data Viewer')
+    st.sidebar.title('version 1.0.1')
     display_name = api.get_displayn_name()
     uid = st.sidebar.number_input('uid', min_value=1, max_value=100, value=1, step=1)
+    
 
     setupUser(uid=uid)
     display_name = api.get_displayn_name()
