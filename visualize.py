@@ -20,10 +20,19 @@ def init_ui():
     st.header(f"ようこそ{display_name}さん")
 
     date = st.sidebar.date_input("日付を選択")
+    st.write('---')
     if date is not None:
         step=get_step(date=date.strftime("%Y-%m-%d"))
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
 
+    st.write('---')
+    st.write("データが取得できない場合は、再読み込みボタンを押してください")
+    if st.button('再読み込み'):
+        st.rerun()
+
+
+    st.write('---')
+    st.write("データ取得ボタンを押すと、json形式でデータが表示されます")
     # データ取得ボタン
     if st.button('heartrate data'):
         response = heartbeat(date=date.strftime("%Y-%m-%d"))
