@@ -145,7 +145,18 @@ def activity_zone(date: str = "today", period: str = "1d"):
     res = request(session.get, url, headers=headers)
     return res
 
+def get_activity_zone(date: str = "today", period: str = "1d"):
+    res = activity_zone(date=date, period=period)
+    data = res.json()
+    print(data)
 
+    if len(data["activities-active-zone-minutes"]) == 0:
+        return 0, 0, 0
+
+    fat_burn_minutes = data["activities-active-zone-minutes"][0]["value"]["fatBurnActiveZoneMinutes"]
+    cardio_minutes = data["activities-active-zone-minutes"][0]["value"]["cardioActiveZoneMinutes"]
+    total_active_minutes = data["activities-active-zone-minutes"][0]["value"]["activeZoneMinutes"]
+    return fat_burn_minutes, cardio_minutes, total_active_minutes
 
 
 def activity_summary(date: str = "today", period: str = "1d"):

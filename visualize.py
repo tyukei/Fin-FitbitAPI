@@ -7,12 +7,16 @@ from api import hrv_summary
 from api import get_step
 from api import setupUser
 from api import get_user
+from api import get_activity_zone
 import api
 
+
+
+VERSION = "1.0.2"
 def init_ui():
 
     st.title('Fitbit Data Viewer')
-    st.sidebar.title('version 1.0.1')
+    st.sidebar.title(f'version {VERSION}')
     display_name = api.get_displayn_name()
     uid = st.sidebar.number_input('uid', min_value=1, max_value=100, value=1, step=1)
     
@@ -26,6 +30,11 @@ def init_ui():
     if date is not None:
         step=get_step(date=date.strftime("%Y-%m-%d"))
         st.write(f"{date.strftime('%Y-%m-%d')}の歩数は{step}歩です")
+        fat_burn_minutes, cardio_minutes, total_active_minutes = get_activity_zone(date=date.strftime("%Y-%m-%d"))
+        st.write(f"{date.strftime('%Y-%m-%d')}のfat_burn_minutes時間は{fat_burn_minutes}分です")
+        st.write(f"{date.strftime('%Y-%m-%d')}のcardio_minutes時間は{cardio_minutes}分です")
+        st.write(f"{date.strftime('%Y-%m-%d')}のtotal_active_minutes時間は{total_active_minutes}分です")
+        
 
     st.write('---')
     st.write("データが取得できない場合は、再読み込みボタンを押してください")
